@@ -1,16 +1,37 @@
-# React + Vite
+# 🔬 Jargon Buster - Interaktives Wissenschafts-Glossar
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+## 📖 Projektübersicht
+**Jargon Buster** ist eine mit React entwickelte Webanwendung, die komplexe wissenschaftliche Begriffe verständlich und zugänglich macht. Sie dient als interaktives Glossar, in dem Benutzer nach Fachbegriffen suchen, sie filtern und mithilfe von Karteikarten (Flashcards) lernen können.
 
-Currently, two official plugins are available:
+Dieses Projekt wurde als **Abschlussprojekt** für den Kurs *App-Entwicklung (React)* an der **Hochschule Hannover** erstellt.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🎯 Die Idee
+Die Wissenschaftskommunikation leidet oft unter Fachjargon. Diese Anwendung löst dieses Problem durch ein durchsuchbares, interaktives Wörterbuch. Benutzer können Begriffe nachschlagen, Favoriten speichern und ihr Wissen im "Karteikarten-Modus" testen.
 
-## React Compiler
+## 🎮 Interaktive Funktionen (6+)
+1. **🔍 Suchleiste:** Filtert das Glossar sofort während der Eingabe.
+2. **📂 Kategorie-Filter:** Filtert Begriffe nach wissenschaftlichen Bereichen (z.B. Klima, KI, Biologie).
+3. **⭐ Favoriten-System:** Speichert Begriffe in einer persönlichen Liste (mithilfe von `localStorage`, bleibt nach dem Neuladen erhalten).
+4. **🔤 Alphabetische Sortierung:** Sortiert die Liste von A-Z oder Z-A.
+5. **🎴 Karteikarten-Modus:** Blendet Definitionen aus, damit Benutzer ihr Gedächtnis testen können.
+6. **➕ Neuen Begriff hinzufügen:** Ein Formular zum Hinzufügen neuer Begriffe (simuliert ein Admin-Panel).
+7. **📊 Live-Zähler:** Zeigt dynamisch an, wie viele Begriffe gerade sichtbar sind.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ⚛️ Verwendete React-Hooks
+*   **`useState`:** Für die Verwaltung von Suchbegriffen, Kategorien, Sortierreihenfolge und dem Karteikarten-Modus.
+*   **`useReducer`:** Für komplexe Zustandslogik (Verwalten der Glossarliste, Hinzufügen, Löschen und Favorisieren von Begriffen).
+*   **`useContext`:** Zur Weitergabe von Daten an alle Komponenten, ohne "Prop Drilling".
+*   **`useEffect`:** Zur Synchronisierung der Favoriten mit dem `localStorage`.
+*   **`useMemo`:** Zur Leistungsoptimierung (Such-, Filter- und Sortierlogik wird nur bei Bedarf neu berechnet).
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## 🏗️ Komponenten-Struktur
+```text
+App.jsx
+├── Header.jsx                (Titel und UI)
+├── SearchBar.jsx             (Suchleiste + Kategorie-Filter)
+├── GlossaryProvider.jsx      (Context + Reducer für globalen Zustand)
+│   ├── GlossaryList.jsx      (Rendert die Liste der TermCards)
+│   │   └── TermCard.jsx      (Einzelner Begriff: Name, Definition, Favoriten-Button)
+│   ├── FlashcardMode.jsx     (Umschalten zum Ausblenden der Definitionen)
+│   └── AddTermForm.jsx       (Formular zum Hinzufügen neuer Begriffe)
+└── Footer.jsx                (Credits)
