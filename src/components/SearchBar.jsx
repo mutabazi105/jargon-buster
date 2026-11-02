@@ -3,8 +3,8 @@ import React, { useContext } from 'react';
 import { GlossaryContext } from '../context/GlossaryProvider';
 
 function SearchBar() {
-  // 1. Get search states from context
-  const { searchTerm, setSearchTerm, selectedCategory, setSelectedCategory } = useContext(GlossaryContext);
+  // 1. Get search states and unique categories from context
+  const { searchTerm, setSearchTerm, selectedCategory, setSelectedCategory, uniqueCategories } = useContext(GlossaryContext);
 
   return (
     <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
@@ -17,17 +17,16 @@ function SearchBar() {
         style={{ padding: "10px", flex: 1, borderRadius: "5px", border: "1px solid #ccc" }}
       />
 
-      {/* 3. Category Filter */}
+      {/* 3. Category Filter (Dynamically mapped) */}
       <select
         value={selectedCategory}
         onChange={(e) => setSelectedCategory(e.target.value)}
         style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
       >
         <option value="Alle">Alle Kategorien</option>
-        <option value="Klima">Klima</option>
-        <option value="KI">KI</option>
-        <option value="Biologie">Biologie</option>
-        <option value="Informatik">Informatik</option>
+        {uniqueCategories.map((cat) => (
+          <option key={cat} value={cat}>{cat}</option>
+        ))}
       </select>
     </div>
   );

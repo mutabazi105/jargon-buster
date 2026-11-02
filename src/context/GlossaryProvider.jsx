@@ -40,7 +40,7 @@ export const GlossaryProvider = ({ children }) => {
   useEffect(() => {
     const favorites = terms.filter(t => t.isFavorite).map(t => t.id);
     localStorage.setItem('jargon-buster-favorites', JSON.stringify(favorites));
-  }, [terms]); // Runs only when 'terms' changes
+  }, [terms]);
 
   // 6. useMemo: Compute visible terms based on search and category
   const visibleTerms = useMemo(() => {
@@ -49,7 +49,13 @@ export const GlossaryProvider = ({ children }) => {
       const matchesCategory = selectedCategory === "Alle" || term.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
-  }, [terms, searchTerm, selectedCategory]); // Runs only when these change
+  }, [terms, searchTerm, selectedCategory]);
+
+  // 7. useMemo: Dynamically extract unique categories from terms
+  const uniqueCategories = useMemo(() => {
+    const categories = terms.map((term) => term.category);
+    return [...new Set(categories)];
+  }, [terms]);
 
   return (
     <GlossaryContext.Provider value={{ 
@@ -59,7 +65,8 @@ export const GlossaryProvider = ({ children }) => {
       setSearchTerm, 
       selectedCategory, 
       setSelectedCategory,
-      visibleTerms 
+      visibleTerms,
+      uniqueCategories 
     }}>
       {children}
     </GlossaryContext.Provider>
