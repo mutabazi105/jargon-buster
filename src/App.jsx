@@ -4,7 +4,7 @@ import { GlossaryProvider } from './context/GlossaryProvider';
 import GlossaryList from './components/GlossaryList';
 import SearchBar from './components/SearchBar';
 import AddTermForm from './components/AddTermForm';
-import FlashcardMode from './components/FlashcardMode'; // <-- Iyi ni nshya
+import FlashcardMode from './components/FlashcardMode';
 import './App.css';
 
 function App() {
@@ -12,23 +12,23 @@ function App() {
 
   return (
     <GlossaryProvider>
-      <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
+      <div className="container">
         <h1>Jargon Buster</h1>
-        <p>Interaktives Wissenschafts-Glossar</p>
+        <p className="subtitle">Interaktives Wissenschafts-Glossar</p>
         <hr />
         
         <SearchBar />
 
-        <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
+        <div className="view-toggle">
           <button 
-            onClick={() => setViewMode("list")} 
-            style={{ padding: "10px", backgroundColor: viewMode === "list" ? "#333" : "#ccc", color: viewMode === "list" ? "white" : "black", cursor: "pointer" }}
+            className={viewMode === "list" ? "active" : ""} 
+            onClick={() => setViewMode("list")}
           >
             Listenansicht
           </button>
           <button 
-            onClick={() => setViewMode("flashcards")} 
-            style={{ padding: "10px", backgroundColor: viewMode === "flashcards" ? "#333" : "#ccc", color: viewMode === "flashcards" ? "white" : "black", cursor: "pointer" }}
+            className={viewMode === "flashcards" ? "active" : ""} 
+            onClick={() => setViewMode("flashcards")}
           >
             Karteikarten
           </button>
@@ -42,7 +42,6 @@ function App() {
         ) : (
           <FlashcardMode />
         )}
-        
       </div>
     </GlossaryProvider>
   );
