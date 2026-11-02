@@ -3,22 +3,20 @@ import React, { useState, useContext } from 'react';
 import { GlossaryContext } from '../context/GlossaryProvider';
 
 function AddTermForm() {
-  const { dispatch } = useContext(GlossaryContext);
+  // 1. Fata dispatch na uniqueCategories muri context
+  const { dispatch, uniqueCategories } = useContext(GlossaryContext);
 
-  // 1. Local state for form inputs (category starts empty so user can type anything)
   const [formData, setFormData] = useState({
     term: "",
     definition: "",
     category: "" 
   });
 
-  // 2. Handle changes in the input fields
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 3. Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.term || !formData.definition || !formData.category) return;
@@ -29,12 +27,11 @@ function AddTermForm() {
         id: Date.now(),
         term: formData.term,
         definition: formData.definition,
-        category: formData.category, // Takes whatever the user typed
+        category: formData.category,
         isFavorite: false
       }
     });
 
-    // Reset form
     setFormData({ term: "", definition: "", category: "" });
   };
 
@@ -61,15 +58,23 @@ function AddTermForm() {
           style={{ padding: "8px", minHeight: "60px" }}
         />
         
-        {/* 4. Changed from select to text input for free typing */}
+        {/* 2. Hano ni ho dukoresha input ifite datalist */}
         <input
           type="text"
           name="category"
-          placeholder="Kategorie (z.B. Physik, Chemie)"
+          list="category-options" // Ibi bihuza na datalist iri hasi
+          placeholder="Kategorie wählen oder neu eingeben..."
           value={formData.category}
           onChange={handleChange}
           style={{ padding: "8px" }}
         />
+        
+        {/* 3. Datalist: Iha amahitamo y'amajambo ariho */}
+        <datalist id="category-options">
+          {uniqueCategories.map((cat) => (
+            <option key={cat} value={cat} />
+          ))}
+        </datalist>
 
         <button type="submit" style={{ padding: "10px", backgroundColor: "#4CAF50", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
           Hinzufügen
