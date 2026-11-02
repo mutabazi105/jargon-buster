@@ -3,7 +3,8 @@ import React, { useState, useContext } from 'react';
 import { GlossaryContext } from '../context/GlossaryProvider';
 
 function AddTermForm() {
-  const { dispatch, uniqueCategories } = useContext(GlossaryContext);
+  // Get terms from context to check for duplicates
+  const { dispatch, uniqueCategories, terms } = useContext(GlossaryContext);
 
   const [formData, setFormData] = useState({
     term: "",
@@ -18,19 +19,41 @@ function AddTermForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.term || !formData.definition || !formData.category) return;
 
+    // 1. Basic validation: check if fields are empty
+    if (!formData.term.trim() || !formData.definition.trim() || !formData.category.trim()) {
+      alert("Bitte füllen Sie alle Felder aus.");
+      return;
+    }
+
+    // 2. Helper function to normalize strings (remove spaces, hyphens, underscores, and lowercase)
+    const cleanString = (str) => {
+      return str.toLowerCase().replace(/[\s\-_]+/g, '');
+    };
+
+    // 3. Check for duplicate term (case-insensitive and ignores spaces/special characters)
+    const isDuplicate = terms.some(
+      (t) => cleanString(t.term) === cleanString(formData.term)
+    );
+
+    if (isDuplicate) {
+      alert("Dieser Begriff existiert bereits im Glossar!");
+      return;
+    }
+
+    // 4. Dispatch ADD_TERM action
     dispatch({
       type: 'ADD_TERM',
       payload: {
         id: Date.now(),
-        term: formData.term,
-        definition: formData.definition,
-        category: formData.category,
+        term: formData.term.trim(),
+        definition: formData.definition.trim(),
+        category: formData.category.trim(),
         isFavorite: false
       }
     });
 
+    // 5. Clear form after submission
     setFormData({ term: "", definition: "", category: "" });
   };
 
