@@ -1,5 +1,5 @@
 // src/context/GlossaryProvider.jsx
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useState, useEffect, useMemo } from 'react';
 
 // 1. Initial State (Mock Data)
 const initialTerms = [
@@ -30,12 +30,37 @@ const glossaryReducer = (state, action) => {
   }
 };
 
-// 4. Provider Component (Wraps the app and provides state)
+// 4. Provider Component
 export const GlossaryProvider = ({ children }) => {
   const [terms, dispatch] = useReducer(glossaryReducer, initialTerms);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Alle");
+
+  // 5. useEffect: Save favorites to localStorage
+  useEffect(() => {
+    const favorites = terms.filter(t => t.isFavorite).map(t => t.id);
+    localStorage.setItem('jargon-buster-favorites', JSON.stringify(favorites));
+  }, [terms]); // Runs only when 'terms' changes
+
+  // 6. useMemo: Compute visible terms based on search and category
+  const visibleTerms = useMemo(() => {
+    return terms.filter((term) => {
+      const matchesSearch = term.term.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === "Alle" || term.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [terms, searchTerm, selectedCategory]); // Runs only when these change
 
   return (
-    <GlossaryContext.Provider value={{ terms, dispatch }}>
+    <GlossaryContext.Provider value={{ 
+      terms, 
+      dispatch, 
+      searchTerm, 
+      setSearchTerm, 
+      selectedCategory, 
+      setSelectedCategory,
+      visibleTerms 
+    }}>
       {children}
     </GlossaryContext.Provider>
   );
