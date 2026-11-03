@@ -45,21 +45,27 @@ export const GlossaryProvider = ({ children }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Alle");
   const [sortOrder, setSortOrder] = useState("az");
+  
+  // states for Theme and Favorites Filter
+  const [theme, setTheme] = useState("light"); 
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 
-  // 5. Save terms to localStorage whenever they change
+  // 5. Save terms to localStorage
   useEffect(() => {
     localStorage.setItem('jargon-buster-terms', JSON.stringify(terms));
   }, [terms]);
 
-  // 6. Compute visible terms (Filter and Sort)
+  // 6. Compute visible terms (Filter, Search, Sort, Favorites)
   const visibleTerms = useMemo(() => {
-    // Safety check to prevent errors if terms is undefined
-    if (!Array.isArray(terms)) return []; 
+    if (!Array.isArray(terms)) return [];
 
     const filtered = terms.filter((term) => {
       const matchesSearch = term.term.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = selectedCategory === "Alle" || term.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+      // Check if we should only show favorites
+      const matchesFavorites = showFavoritesOnly ? term.isFavorite : true; 
+      
+      return matchesSearch && matchesCategory && matchesFavorites;
     });
 
     return [...filtered].sort((a, b) => {
@@ -67,9 +73,9 @@ export const GlossaryProvider = ({ children }) => {
       if (sortOrder === "za") return b.term.localeCompare(a.term);
       return 0;
     });
-  }, [terms, searchTerm, selectedCategory, sortOrder]);
+  }, [terms, searchTerm, selectedCategory, sortOrder, showFavoritesOnly]);
 
-  // 7. Extract unique categories dynamically
+  // 7. Extract unique categories
   const uniqueCategories = useMemo(() => {
     if (!Array.isArray(terms)) return [];
     const categories = terms.map((term) => term.category);
@@ -80,7 +86,9 @@ export const GlossaryProvider = ({ children }) => {
     <GlossaryContext.Provider value={{ 
       terms, dispatch, searchTerm, setSearchTerm, 
       selectedCategory, setSelectedCategory, visibleTerms, uniqueCategories,
-      sortOrder, setSortOrder
+      sortOrder, setSortOrder,
+      theme, setTheme, 
+      showFavoritesOnly, setShowFavoritesOnly 
     }}>
       {children}
     </GlossaryContext.Provider>
