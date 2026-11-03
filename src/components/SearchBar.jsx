@@ -4,9 +4,9 @@ import { GlossaryContext } from '../context/GlossaryProvider';
 
 function SearchBar() {
   const { 
-    searchTerm, setSearchTerm, 
-    selectedCategory, setSelectedCategory, 
-    uniqueCategories, sortOrder, setSortOrder 
+    searchTerm, setSearchTerm, selectedCategory, setSelectedCategory, 
+    uniqueCategories, sortOrder, setSortOrder,
+    showFavoritesOnly, setShowFavoritesOnly 
   } = useContext(GlossaryContext);
 
   return (
@@ -35,6 +35,16 @@ function SearchBar() {
         <option value="az">Sortierung: A-Z</option>
         <option value="za">Sortierung: Z-A</option>
       </select>
+
+      {/* Checkbox for Favorites only filter */}
+      <label style={{ display: "flex", alignItems: "center", gap: "5px", cursor: "pointer" }}>
+        <input 
+          type="checkbox" 
+          checked={showFavoritesOnly} 
+          onChange={(e) => setShowFavoritesOnly(e.target.checked)} 
+        />
+        Nur Favoriten
+      </label>
     </div>
   );
 }
