@@ -303,3 +303,60 @@ hr {
 .flashcard-controls button:hover {
   background-color: #4f46e5;
 }
+
+/* =========================================
+   9. DARK MODE STYLES
+   ========================================= */
+body {
+  transition: background-color 0.3s ease;
+}
+
+.container {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container.dark-mode {
+  background-color: #1e1e2f;
+  color: #e2e8f0;
+}
+
+.container.dark-mode h1,
+.container.dark-mode h3 {
+  color: #f8fafc;
+}
+
+.container.dark-mode hr {
+  background-color: #334155;
+}
+
+.container.dark-mode .term-card {
+  background-color: #2a2a3d;
+  border-color: #3b3b54;
+}
+
+.container.dark-mode .term-card h3 {
+  color: #93c5fd;
+}
+
+.container.dark-mode .term-card p {
+  color: #cbd5e1;
+}
+
+.container.dark-mode .term-category {
+  background-color: #3b3b54;
+  color: #93c5fd;
+}
+
+.container.dark-mode .search-bar input,
+.container.dark-mode .search-bar select,
+.container.dark-mode .add-form input,
+.container.dark-mode .add-form textarea {
+  background-color: #2a2a3d;
+  color: #e2e8f0;
+  border-color: #3b3b54;
+}
+
+.container.dark-mode .add-form {
+  background-color: #2a2a3d;
+  border-color: #3b3b54;
+}
