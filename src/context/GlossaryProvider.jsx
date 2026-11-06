@@ -1,7 +1,7 @@
 // src/context/GlossaryProvider.jsx
 import React, { createContext, useReducer, useState, useEffect, useMemo } from 'react';
 
-// 1. Initial Data
+// 1. Initial State (Mock Data)
 const initialTerms = [
   { id: 1, term: "Klimawandel", definition: "Die langfristige Veränderung der Temperaturen und Wetterbedingungen auf der Erde.", category: "Klima", isFavorite: false },
   { id: 2, term: "Künstliche Intelligenz", definition: "Die Fähigkeit von Maschinen, Aufgaben zu übernehmen, die normalerweise menschliche Intelligenz erfordern.", category: "KI", isFavorite: false },
@@ -11,7 +11,7 @@ const initialTerms = [
 
 export const GlossaryContext = createContext();
 
-// 2. Reducer Function
+// 2. Reducer Function (Handles state changes)
 const glossaryReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_TERM':
@@ -22,6 +22,12 @@ const glossaryReducer = (state, action) => {
       return state.map((term) =>
         term.id === action.payload
           ? { ...term, isFavorite: !term.isFavorite }
+          : term
+      );
+    case 'EDIT_TERM':
+      return state.map((term) =>
+        term.id === action.payload.id
+          ? { ...term, ...action.payload.updatedData }
           : term
       );
     default:
@@ -45,8 +51,6 @@ export const GlossaryProvider = ({ children }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Alle");
   const [sortOrder, setSortOrder] = useState("az");
-  
-  // states for Theme and Favorites Filter
   const [theme, setTheme] = useState("light"); 
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 
@@ -62,7 +66,6 @@ export const GlossaryProvider = ({ children }) => {
     const filtered = terms.filter((term) => {
       const matchesSearch = term.term.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = selectedCategory === "Alle" || term.category === selectedCategory;
-      // Check if we should only show favorites
       const matchesFavorites = showFavoritesOnly ? term.isFavorite : true; 
       
       return matchesSearch && matchesCategory && matchesFavorites;
@@ -86,8 +89,7 @@ export const GlossaryProvider = ({ children }) => {
     <GlossaryContext.Provider value={{ 
       terms, dispatch, searchTerm, setSearchTerm, 
       selectedCategory, setSelectedCategory, visibleTerms, uniqueCategories,
-      sortOrder, setSortOrder,
-      theme, setTheme, 
+      sortOrder, setSortOrder, theme, setTheme, 
       showFavoritesOnly, setShowFavoritesOnly 
     }}>
       {children}
